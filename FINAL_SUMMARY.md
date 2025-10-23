@@ -45,7 +45,7 @@ Your complete GitHub repository is ready at:
 Users can now install with a single command:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/USERNAME/linux-laptop-thermal-management/main/quick-install.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/adeel-raza/linux-laptop-thermal-management/main/quick-install.sh | sudo bash
 ```
 
 **This will:**
@@ -99,15 +99,15 @@ Real data proves the solution works! 🎯
 
 ## 📝 Before You Push - Quick Checklist
 
-### 1. Replace USERNAME Placeholder
+### 1. Replace adeel-raza Placeholder
 
 **Option A: Before Pushing (Do This Now!)**
 ```bash
 cd /home/adeel/linux-laptop-thermal-management
 
-# Replace USERNAME with your actual GitHub username
+# Replace adeel-raza with your actual GitHub username
 # For example, if your username is "johndoe":
-find . -type f \( -name "*.md" -o -name "*.sh" \) -exec sed -i 's/USERNAME/johndoe/g' {} +
+find . -type f \( -name "*.md" -o -name "*.sh" \) -exec sed -i 's/adeel-raza/johndoe/g' {} +
 ```
 
 **Why Important:** The one-command installer won't work without correct username!
@@ -132,8 +132,8 @@ git commit -m "Initial commit: Linux laptop thermal management (93°C → 66°C)
 - Complete documentation of iterative journey
 - Systemd service integration"
 
-# Replace YOUR_USERNAME below!
-git remote add origin https://github.com/YOUR_USERNAME/linux-laptop-thermal-management.git
+# Replace YOUR_adeel-raza below!
+git remote add origin https://github.com/YOUR_adeel-raza/linux-laptop-thermal-management.git
 
 git branch -M main
 git push -u origin main
@@ -153,7 +153,7 @@ On your repo page → Settings → Topics, add:
 ### 5. Test the One-Command Install
 After pushing, test it from another machine:
 ```bash
-curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/linux-laptop-thermal-management/main/quick-install.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/YOUR_adeel-raza/linux-laptop-thermal-management/main/quick-install.sh | sudo bash
 ```
 
 ---
@@ -167,7 +167,7 @@ Title: [Guide] Fixed Dell laptop overheating on Linux (93°C → 57°C) - One co
 Body: After testing 8 different approaches, I finally achieved Windows-like 
 thermal management on Linux. Install in one command:
 
-curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/linux-laptop-thermal-management/main/quick-install.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/YOUR_adeel-raza/linux-laptop-thermal-management/main/quick-install.sh | sudo bash
 
 Results:
 • Average: 57°C (was 85°C)
@@ -175,7 +175,7 @@ Results:
 • 96% thermal comfort
 • Real test results included
 
-Complete documentation: https://github.com/YOUR_USERNAME/linux-laptop-thermal-management
+Complete documentation: https://github.com/YOUR_adeel-raza/linux-laptop-thermal-management
 ```
 
 **Post to:**
@@ -196,7 +196,7 @@ Method: Dynamic thermal management
 Install: One curl command
 
 Proof + complete solution:
-https://github.com/YOUR_USERNAME/linux-laptop-thermal-management
+https://github.com/YOUR_adeel-raza/linux-laptop-thermal-management
 
 #Linux #Dell #ThermalManagement #OpenSource
 ```
@@ -258,7 +258,7 @@ Based on the quality and structure:
 
 Everything is prepared. Just:
 
-1. **Replace USERNAME** with your GitHub username
+1. **Replace adeel-raza** with your GitHub username
 2. **Push to GitHub** (commands in PUSH_TO_GITHUB.md)
 3. **Test the curl install** to verify it works
 4. **Share on Reddit/Twitter** to help others

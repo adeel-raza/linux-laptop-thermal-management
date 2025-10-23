@@ -44,16 +44,16 @@ git branch -M main
 git push -u origin main
 ```
 
-## Step 3: Update USERNAME Placeholder (IMPORTANT!)
+## Step 3: Update adeel-raza Placeholder (IMPORTANT!)
 
-After pushing, you **MUST** replace `USERNAME` with your actual GitHub username in these files:
+After pushing, you **MUST** replace `adeel-raza` with your actual GitHub username in these files:
 
 ### Option A: Before Pushing (Recommended)
 ```bash
 cd /home/adeel/linux-laptop-thermal-management
 
-# Replace USERNAME with your actual GitHub username
-find . -type f -name "*.md" -o -name "*.sh" | xargs sed -i 's/USERNAME/your-actual-username/g'
+# Replace adeel-raza with your actual GitHub username
+find . -type f -name "*.md" -o -name "*.sh" | xargs sed -i 's/adeel-raza/your-actual-username/g'
 
 # Then commit
 git add .
@@ -63,8 +63,8 @@ git push
 
 ### Option B: After Pushing (Via GitHub Web Interface)
 1. Edit these files on GitHub:
-   - `README.md` (replace `USERNAME` in the curl command)
-   - `quick-install.sh` (replace `USERNAME` in the raw URLs)
+   - `README.md` (replace `adeel-raza` in the curl command)
+   - `quick-install.sh` (replace `adeel-raza` in the raw URLs)
 2. Save each file (GitHub will commit automatically)
 
 ### Also Update:

@@ -62,8 +62,8 @@ git commit -m "Initial commit: Linux laptop thermal management solution
 - Systemd service integration
 - One-command installation"
 
-# Replace 'YOUR_GITHUB_USERNAME' with your actual username!
-git remote add origin https://github.com/YOUR_GITHUB_USERNAME/linux-laptop-thermal-management.git
+# Replace 'YOUR_GITHUB_adeel-raza' with your actual username!
+git remote add origin https://github.com/YOUR_GITHUB_adeel-raza/linux-laptop-thermal-management.git
 
 # Push to GitHub
 git branch -M main
@@ -130,10 +130,10 @@ solution that reduced my Dell laptop temps from 93°C to 66°C on
 Linux while maintaining Windows-like responsiveness.
 
 Install in one command:
-curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/linux-laptop-thermal-management/main/quick-install.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/YOUR_adeel-raza/linux-laptop-thermal-management/main/quick-install.sh | sudo bash
 
 Complete journey, all failed attempts, and real test results:
-https://github.com/YOUR_USERNAME/linux-laptop-thermal-management
+https://github.com/YOUR_adeel-raza/linux-laptop-thermal-management
 
 Key achievements:
 - 27°C temperature reduction (see EXAMPLE_RESULTS.md for proof!)
@@ -161,7 +161,7 @@ Method: Custom thermal management script
 Approach: Predictive + reactive frequency control
 
 Complete solution & journey:
-https://github.com/YOUR_USERNAME/linux-laptop-thermal-management
+https://github.com/YOUR_adeel-raza/linux-laptop-thermal-management
 
 #Linux #Dell #ThermalManagement #OpenSource
 ```
@@ -203,7 +203,7 @@ Based on SEO optimization and comprehensive documentation:
 ## ✅ Final Checklist
 
 Before pushing:
-- [ ] Replace `YOUR_GITHUB_USERNAME` in git commands
+- [ ] Replace `YOUR_GITHUB_adeel-raza` in git commands
 - [ ] Create GitHub repository (public)
 - [ ] Run git commands above
 - [ ] Verify push succeeded

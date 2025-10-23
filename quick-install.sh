@@ -2,7 +2,7 @@
 
 ###############################################################################
 # Linux Laptop Thermal Management - One-Command Quick Installer
-# Usage: curl -fsSL https://raw.githubusercontent.com/USERNAME/linux-laptop-thermal-management/main/quick-install.sh | sudo bash
+# Usage: curl -fsSL https://raw.githubusercontent.com/adeel-raza/linux-laptop-thermal-management/main/quick-install.sh | sudo bash
 ###############################################################################
 
 set -e
@@ -49,7 +49,7 @@ echo ""
 echo -e "${YELLOW}Downloading thermal management script...${NC}"
 
 # Download the aggressive thermal manager script
-curl -fsSL https://raw.githubusercontent.com/USERNAME/linux-laptop-thermal-management/main/scripts/thermal-manager-aggressive.sh > /usr/local/bin/thermal-manager.sh
+curl -fsSL https://raw.githubusercontent.com/adeel-raza/linux-laptop-thermal-management/main/scripts/thermal-manager-aggressive.sh > /usr/local/bin/thermal-manager.sh
 chmod +x /usr/local/bin/thermal-manager.sh
 echo -e "${GREEN}✓ Downloaded thermal manager script${NC}"
 
@@ -81,7 +81,7 @@ echo ""
 echo -e "${YELLOW}Downloading monitoring script...${NC}"
 
 # Download monitoring script
-curl -fsSL https://raw.githubusercontent.com/USERNAME/linux-laptop-thermal-management/main/scripts/monitor-laptop-temps.sh > /usr/local/bin/monitor-laptop-temps
+curl -fsSL https://raw.githubusercontent.com/adeel-raza/linux-laptop-thermal-management/main/scripts/monitor-laptop-temps.sh > /usr/local/bin/monitor-laptop-temps
 chmod +x /usr/local/bin/monitor-laptop-temps
 echo -e "${GREEN}✓ Monitoring script installed${NC}"
 
@@ -145,6 +145,6 @@ echo -e "  • 3.8 GHz turbo bursts for snappy response"
 echo -e "  • 2.6 GHz cap during sustained load"
 echo -e "  • Laptop bottom: comfortable ✓"
 echo ""
-echo -e "${BLUE}GitHub:${NC} https://github.com/USERNAME/linux-laptop-thermal-management"
+echo -e "${BLUE}GitHub:${NC} https://github.com/adeel-raza/linux-laptop-thermal-management"
 echo ""
 

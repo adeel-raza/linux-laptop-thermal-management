@@ -39,7 +39,7 @@ If you're experiencing any of these issues on Linux:
 Copy and paste this single command:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/USERNAME/linux-laptop-thermal-management/main/quick-install.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/adeel-raza/linux-laptop-thermal-management/main/quick-install.sh | sudo bash
 ```
 
 **That's it!** The script will:
@@ -53,7 +53,7 @@ curl -fsSL https://raw.githubusercontent.com/USERNAME/linux-laptop-thermal-manag
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/USERNAME/linux-laptop-thermal-management.git
+git clone https://github.com/adeel-raza/linux-laptop-thermal-management.git
 cd linux-laptop-thermal-management
 
 # 2. Run the automated installer
