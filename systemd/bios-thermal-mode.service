@@ -1,0 +1,13 @@
+[Unit]
+Description=Set Dell BIOS to Performance Thermal Mode
+After=multi-user.target
+Before=thermal-manager.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/set-bios-performance.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+

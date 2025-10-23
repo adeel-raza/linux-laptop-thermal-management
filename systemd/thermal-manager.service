@@ -1,0 +1,13 @@
+[Unit]
+Description=Linux Laptop Thermal Management (Aggressive)
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/thermal-manager.sh
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+

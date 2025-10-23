@@ -1,0 +1,31 @@
+# Logs
+*.log
+/var/log/thermal-manager.log
+
+# State files
+/tmp/thermal-manager-state
+
+# Test results
+test-results-*.txt
+test-results-*.log
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+/tmp/
+
