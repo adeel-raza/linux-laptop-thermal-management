@@ -1,4 +1,4 @@
-# 🔥 Linux Laptop Thermal Management: Dell Laptop Latitude 3520 Overheating Fix When Trubo Boost enabled and CPU freq spike to 3.80 Ghz
+# 🔥 Linux Laptop Thermal Management: Dell Laptop Latitude 3520 Overheating Fix When Trubo Boost enabled
 
 > **Fix CPU overheating, thermal throttling, and hot laptop bottom on Linux | Achieve Windows-like thermal performance on Dell laptops**
 
