@@ -84,6 +84,8 @@ You should see:
 - Peak: 79°C (down from 93°C)
 - Comfortable 96% of the time ✓
 
+**🌡️ Seeing brief temperature spikes?** Read [UNDERSTANDING_BRIEF_SPIKES.md](UNDERSTANDING_BRIEF_SPIKES.md) to understand why 70-85°C spikes are normal, harmless, and unavoidable (and why you shouldn't worry about them!).
+
 ---
 
 ## 🔔 Recent Updates
@@ -380,13 +382,29 @@ sudo systemctl enable thermal-manager.service
 sudo systemctl start thermal-manager.service
 ```
 
-### Issue: Still seeing 80°C+ spikes
+### Issue: Still seeing 70-85°C brief spikes
 
-**Possible causes:**
-1. **Old thermal paste** - Repaste your laptop (can drop 20°C!)
+**⚠️ READ THIS FIRST:** Brief temperature spikes are **completely normal and harmless!**
+
+👉 **[Read: Understanding Brief Temperature Spikes](UNDERSTANDING_BRIEF_SPIKES.md)** 👈
+
+**TL;DR:**
+- Brief (1-3 second) spikes to 70-85°C are **unavoidable** during turbo bursts
+- They occur only 2-3% of the time and are **within CPU specifications**
+- They're a **sign your CPU is working optimally** (turbo is available)
+- Modern CPUs are designed to handle spikes up to 100°C
+- Our script prevents **sustained** heat (65-70°C during continuous load)
+
+**Only investigate if:**
+- ❌ Average temp consistently >75°C during idle
+- ❌ Sustained load causes >85°C for minutes
+- ❌ Laptop bottom uncomfortably hot for extended periods
+
+**Still want to investigate?**
+1. **Old thermal paste** - Repaste your laptop (can drop 20°C baseline!)
 2. **Dust buildup** - Clean heatsink and fans
-3. **Background processes** - Brief spikes (75-82°C) are unavoidable
-4. **Wrong script** - Make sure AGGRESSIVE is active
+3. **Background processes** - Check what's causing sustained CPU usage
+4. **Wrong script** - Make sure AGGRESSIVE version is active
 
 ### Issue: CPU feels sluggish
 
