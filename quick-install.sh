@@ -85,6 +85,32 @@ curl -fsSL https://raw.githubusercontent.com/adeel-raza/linux-laptop-thermal-man
 chmod +x /usr/local/bin/monitor-laptop-temps
 echo -e "${GREEN}✓ Monitoring script installed${NC}"
 
+echo ""
+echo -e "${YELLOW}Installing configuration management tools...${NC}"
+
+# Download configuration switcher
+curl -fsSL https://raw.githubusercontent.com/adeel-raza/linux-laptop-thermal-management/main/scripts/switch-thermal-config.sh > /usr/local/bin/switch-thermal-config.sh
+chmod +x /usr/local/bin/switch-thermal-config.sh
+echo -e "${GREEN}✓ Configuration switcher installed${NC}"
+
+# Download Option C quick-apply script
+curl -fsSL https://raw.githubusercontent.com/adeel-raza/linux-laptop-thermal-management/main/scripts/apply-option-c.sh > /usr/local/bin/apply-option-c.sh
+chmod +x /usr/local/bin/apply-option-c.sh
+echo -e "${GREEN}✓ Quick configuration tools installed${NC}"
+
+echo ""
+echo -e "${YELLOW}Applying recommended configuration (Option C)...${NC}"
+
+# Set Option C thresholds (Relaxed Middle-Ground - Recommended)
+sed -i 's/^PREDICT_CPU_THRESHOLD=.*/PREDICT_CPU_THRESHOLD=75/' /usr/local/bin/thermal-manager.sh
+sed -i 's/^PREDICT_TEMP_THRESHOLD=.*/PREDICT_TEMP_THRESHOLD=67/' /usr/local/bin/thermal-manager.sh
+sed -i 's/^EMERGENCY_TEMP=.*/EMERGENCY_TEMP=75/' /usr/local/bin/thermal-manager.sh
+sed -i 's/^UNLOCK_TEMP_THRESHOLD=.*/UNLOCK_TEMP_THRESHOLD=64/' /usr/local/bin/thermal-manager.sh
+
+# Restart service to apply new configuration
+systemctl restart thermal-manager.service
+echo -e "${GREEN}✓ Option C (Relaxed Middle-Ground) configured${NC}"
+
 # Optional: Dell BIOS mode
 if command -v smbios-thermal-ctl &> /dev/null; then
     echo ""
@@ -127,25 +153,33 @@ echo -e "${GREEN}═════════════════════
 echo -e "${GREEN}   Installation Complete! 🎉${NC}"
 echo -e "${GREEN}════════════════════════════════════════════════════════════${NC}"
 echo ""
-echo -e "Thermal management is now active and will persist across reboots."
+echo -e "Thermal management is now active with ${BLUE}Option C (Recommended)${NC}"
+echo -e "This configuration provides the best balance of performance and comfort."
 echo ""
-echo -e "${BLUE}To monitor temperatures:${NC}"
+echo -e "${BLUE}Monitor your system:${NC}"
 echo -e "  monitor-laptop-temps"
 echo ""
-echo -e "${BLUE}To check service status:${NC}"
+echo -e "${BLUE}Switch configurations (optional):${NC}"
+echo -e "  sudo switch-thermal-config.sh"
+echo -e "  ${YELLOW}Options: A (Coolest), B (Max Performance), C (Best Balance)${NC}"
+echo ""
+echo -e "${BLUE}Check service status:${NC}"
 echo -e "  sudo systemctl status thermal-manager.service"
 echo ""
-echo -e "${BLUE}To view logs:${NC}"
-echo -e "  sudo tail -f /var/log/thermal-manager.log"
+echo -e "${YELLOW}Expected results with Option C:${NC}"
+echo -e "  • Idle temps: 48-55°C ❄️"
+echo -e "  • Normal work: 50-65°C ✅"
+echo -e "  • Heavy load: 60-75°C ✅"
+echo -e "  • Full 3.8 GHz turbo bursts available"
+echo -e "  • 10% faster than conservative mode"
+echo -e "  • Laptop bottom: comfortable 90%+ of time ✓"
 echo ""
-echo -e "${YELLOW}Expected results:${NC}"
-echo -e "  • Peak temps: 66-75°C (down from 90°C+)"
-echo -e "  • Average temps: 50-60°C during work"
-echo -e "  • 3.8 GHz turbo bursts for snappy response"
-echo -e "  • 2.6 GHz cap during sustained load"
-echo -e "  • Laptop bottom: comfortable ✓"
+echo -e "${YELLOW}Brief 75-85°C spikes are normal and harmless!${NC}"
+echo -e "  They last <5 seconds and mean your turbo boost is working."
 echo ""
 echo -e "${BLUE}GitHub:${NC} https://github.com/adeel-raza/linux-laptop-thermal-management"
+echo -e "${BLUE}Test Results:${NC} See TEST_RESULTS.md for detailed performance comparison"
 echo ""
+
 
 

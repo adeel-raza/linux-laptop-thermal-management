@@ -9,15 +9,15 @@ MAX_SUSTAINED_FREQ="2600000"  # 2.6 GHz (safe sustained)
 MAX_BURST_FREQ="3800000"      # 3.8 GHz (turbo)
 
 # AGGRESSIVE predictive thresholds
-PREDICT_CPU_THRESHOLD=50      # Lock at CPU >50% (earlier than before)
-PREDICT_TEMP_THRESHOLD=58     # Lock if temp >58°C
+PREDICT_CPU_THRESHOLD=75
+PREDICT_TEMP_THRESHOLD=67
 
 # REACTIVE emergency threshold
-EMERGENCY_TEMP=65             # Force lock at 65°C (earlier than before)
+EMERGENCY_TEMP=75
 
 # UNLOCK thresholds
 UNLOCK_CPU_THRESHOLD=35       # Unlock when CPU drops <35%
-UNLOCK_TEMP_THRESHOLD=60      # And temp <60°C
+UNLOCK_TEMP_THRESHOLD=64
 
 # Fast polling for quick reaction
 CHECK_INTERVAL=0.1            # Check every 0.1s (10 times per second)
