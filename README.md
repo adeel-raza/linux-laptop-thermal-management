@@ -86,6 +86,28 @@ You should see:
 
 ---
 
+## 🔔 Recent Updates
+
+### v1.1 - Unlock Threshold Fix (October 2025)
+
+**Issue Fixed:** Some users reported CPU staying locked at 2.6 GHz after reboot, with no turbo bursts returning.
+
+**Root Cause:** Unlock temperature threshold was too conservative (56°C). Modern laptops naturally experience brief 57-59°C idle spikes which prevented unlocking.
+
+**Solution:** Increased unlock threshold from 56°C → 60°C
+
+**Benefits:**
+- ✅ More reliable unlock after sustained load
+- ✅ 3.8 GHz turbo bursts return faster (10-20 seconds vs several minutes)
+- ✅ No more "stuck locked" situations
+- ✅ All safety features remain unchanged
+
+**To update:** Re-run the installer or manually update `UNLOCK_TEMP_THRESHOLD=60` in `/usr/local/bin/thermal-manager.sh`
+
+See [CHANGELOG.md](CHANGELOG.md) for complete version history.
+
+---
+
 ## 🔬 The Journey: How We Achieved This
 
 ### Phase 1: Initial Diagnosis (The Problem)

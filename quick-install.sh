@@ -148,3 +148,4 @@ echo ""
 echo -e "${BLUE}GitHub:${NC} https://github.com/adeel-raza/linux-laptop-thermal-management"
 echo ""
 
+

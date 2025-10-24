@@ -17,7 +17,7 @@ EMERGENCY_TEMP=65             # Force lock at 65°C (earlier than before)
 
 # UNLOCK thresholds
 UNLOCK_CPU_THRESHOLD=35       # Unlock when CPU drops <35%
-UNLOCK_TEMP_THRESHOLD=56      # And temp <56°C
+UNLOCK_TEMP_THRESHOLD=60      # And temp <60°C
 
 # Fast polling for quick reaction
 CHECK_INTERVAL=0.1            # Check every 0.1s (10 times per second)
