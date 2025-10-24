@@ -6,18 +6,19 @@
 LOG_FILE="/var/log/thermal-manager.log"
 STATE_FILE="/tmp/thermal-manager-state"
 MAX_SUSTAINED_FREQ="2600000"  # 2.6 GHz (safe sustained)
-MAX_BURST_FREQ="3800000"      # 3.8 GHz (turbo)
+MAX_BURST_FREQ="3500000"      # 3.5 GHz (Option D - Conservative Turbo)
 
-# AGGRESSIVE predictive thresholds
-PREDICT_CPU_THRESHOLD=75
-PREDICT_TEMP_THRESHOLD=67
+# OPTION D: Conservative Turbo
+# Lower max turbo to reduce spike severity while maintaining good performance
+PREDICT_CPU_THRESHOLD=70      # Lock at CPU >70%
+PREDICT_TEMP_THRESHOLD=62     # Lock if temp >62°C
 
 # REACTIVE emergency threshold
-EMERGENCY_TEMP=75
+EMERGENCY_TEMP=72             # Force lock at 72°C
 
 # UNLOCK thresholds
 UNLOCK_CPU_THRESHOLD=35       # Unlock when CPU drops <35%
-UNLOCK_TEMP_THRESHOLD=64
+UNLOCK_TEMP_THRESHOLD=58      # And temp <58°C
 
 # Fast polling for quick reaction
 CHECK_INTERVAL=0.1            # Check every 0.1s (10 times per second)
