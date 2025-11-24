@@ -1,24 +1,47 @@
 #!/bin/bash
 
-# AGGRESSIVE thermal management with fast polling
-# Goal: Catch spikes BEFORE they hit 80°C+
+# Dual-Mode Thermal Manager
+# Supports: NORMAL (3.7 GHz) and PERFORMANCE (4.2 GHz single-core / ~3.8 GHz all-core) modes
 
 LOG_FILE="/var/log/thermal-manager.log"
 STATE_FILE="/tmp/thermal-manager-state"
-MAX_SUSTAINED_FREQ="2600000"  # 2.6 GHz (safe sustained)
-MAX_BURST_FREQ="3500000"      # 3.5 GHz (Option D - Conservative Turbo)
+MODE_FILE="/etc/thermal-manager-mode"
 
-# OPTION D: Conservative Turbo
-# Lower max turbo to reduce spike severity while maintaining good performance
-PREDICT_CPU_THRESHOLD=70      # Lock at CPU >70%
-PREDICT_TEMP_THRESHOLD=58     # Lock if temp >58°C (STRICTER)
+# Default to NORMAL mode if mode file doesn't exist
+if [ -f "$MODE_FILE" ]; then
+    MODE=$(cat "$MODE_FILE" | tr '[:lower:]' '[:upper:]')
+else
+    MODE="NORMAL"
+    echo "NORMAL" > "$MODE_FILE"
+fi
 
-# REACTIVE emergency threshold
-EMERGENCY_TEMP=68             # Force lock at 68°C (STRICTER)
-
-# UNLOCK thresholds
-UNLOCK_CPU_THRESHOLD=35       # Unlock when CPU drops <35%
-UNLOCK_TEMP_THRESHOLD=58      # And temp <58°C
+# Configure based on mode
+if [ "$MODE" = "PERFORMANCE" ]; then
+    # PERFORMANCE MODE: Maximum CPU utilization - Minimal throttling for peak performance
+    # Note: 4.2 GHz allows single-core turbo; all-core naturally caps at ~3.8 GHz
+    MAX_SUSTAINED_FREQ="3800000"  # 3.8 GHz (when locked, near max all-core performance)
+    MAX_BURST_FREQ="4200000"      # 4.2 GHz (Single-core turbo max; all-core ~3.8 GHz)
+    PREDICT_CPU_THRESHOLD=99      # Lock at CPU >99% (virtually never triggers)
+    PREDICT_TEMP_THRESHOLD=87     # Lock if temp >87°C (protect from dangerous temps)
+    EMERGENCY_TEMP=88             # Force lock at 88°C (protect from 90°C+ spikes)
+    UNLOCK_CPU_THRESHOLD=80       # Unlock when CPU <80% (unlock very quickly)
+    UNLOCK_TEMP_THRESHOLD=82      # And temp <82°C (unlock when safe)
+    HIGH_CPU_THRESHOLD=99         # Extremely high CPU threshold (rarely triggers)
+    HIGH_CPU_TEMP_THRESHOLD=87    # Only with very high temp
+    MODE_NAME="PERFORMANCE"
+else
+    # NORMAL MODE: Balanced performance and thermal management
+    MAX_SUSTAINED_FREQ="2600000"  # 2.6 GHz (when locked)
+    MAX_BURST_FREQ="3700000"      # 3.7 GHz (Balanced turbo)
+    PREDICT_CPU_THRESHOLD=75      # Lock at CPU >75%
+    PREDICT_TEMP_THRESHOLD=62     # Lock if temp >62°C
+    EMERGENCY_TEMP=72             # Force lock at 72°C
+    UNLOCK_CPU_THRESHOLD=40       # Unlock when CPU <40%
+    UNLOCK_TEMP_THRESHOLD=60      # And temp <60°C
+    HIGH_CPU_THRESHOLD=85         # High CPU threshold
+    HIGH_CPU_TEMP_THRESHOLD=65    # With elevated temp
+    MODE_NAME="NORMAL"
+fi
 
 # Fast polling for quick reaction
 CHECK_INTERVAL=0.1            # Check every 0.1s (10 times per second)
@@ -56,6 +79,20 @@ set_max_freq() {
     done
 }
 
+set_governor() {
+    local gov=$1
+    for cpu in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do
+        echo "$gov" > "$cpu" 2>/dev/null
+    done
+}
+
+set_energy_preference() {
+    local pref=$1
+    if [ -f /sys/devices/system/cpu/intel_pstate/energy_performance_preference ]; then
+        echo "$pref" > /sys/devices/system/cpu/intel_pstate/energy_performance_preference 2>/dev/null
+    fi
+}
+
 is_locked() {
     [ -f "$STATE_FILE" ] && [ "$(cat $STATE_FILE)" = "locked" ]
 }
@@ -68,7 +105,7 @@ lock_frequency() {
     # Only log if state is changing
     if ! is_locked; then
         echo "locked" > "$STATE_FILE"
-        log_message "🔒 LOCKED to 2.6 GHz ($reason: temp=${temp}°C, CPU=${cpu}%)"
+        log_message "🔒 LOCKED to $(echo "scale=1; $MAX_SUSTAINED_FREQ / 1000000" | bc) GHz ($reason: temp=${temp}°C, CPU=${cpu}%)"
     fi
     
     # ALWAYS enforce lock (prevent race conditions)
@@ -89,11 +126,47 @@ unlock_frequency() {
     set_max_freq "$MAX_BURST_FREQ"
 }
 
-log_message "Thermal manager started (Option D: 0.1s polling, CPU >${PREDICT_CPU_THRESHOLD}% lock, Max $(echo "scale=1; $MAX_BURST_FREQ / 1000000" | bc) GHz)"
+log_message "Thermal manager started (${MODE_NAME} MODE: Max $(echo "scale=1; $MAX_BURST_FREQ / 1000000" | bc) GHz, CPU >${PREDICT_CPU_THRESHOLD}% lock, Emergency at ${EMERGENCY_TEMP}°C)"
 
 # Initialize state - start unlocked with max freq set.
 echo "unlocked" > "$STATE_FILE"
 set_max_freq "$MAX_BURST_FREQ"
+
+# Set CPU governor based on mode
+if [ "$MODE" = "PERFORMANCE" ]; then
+    # PERFORMANCE mode: Use performance-oriented governor
+    if [ -f /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ]; then
+        if grep -q "performance" /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors 2>/dev/null; then
+            set_governor "performance"
+            log_message "Set CPU governor to 'performance' for maximum responsiveness"
+        elif grep -q "schedutil" /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors 2>/dev/null; then
+            set_governor "schedutil"
+            log_message "Set CPU governor to 'schedutil' for better performance"
+        fi
+    fi
+    # Set energy preference to 'performance' if available
+    set_energy_preference "performance"
+    # Force higher minimum performance to prevent dropping below 2.5 GHz under load
+    # 80% of 4.2 GHz = ~3.4 GHz minimum, ensuring much better sustained performance
+    # This prevents Intel P-State from throttling too aggressively under power limits
+    if [ -f /sys/devices/system/cpu/intel_pstate/min_perf_pct ]; then
+        echo 80 > /sys/devices/system/cpu/intel_pstate/min_perf_pct 2>/dev/null
+        log_message "Set Intel P-State min_perf_pct to 80% to prevent 1.7-1.9 GHz cap"
+    fi
+else
+    # NORMAL mode: Use balanced governor (powersave or schedutil)
+    if [ -f /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ]; then
+        if grep -q "schedutil" /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors 2>/dev/null; then
+            set_governor "schedutil"
+            log_message "Set CPU governor to 'schedutil' for balanced operation"
+        elif grep -q "powersave" /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors 2>/dev/null; then
+            set_governor "powersave"
+            log_message "Set CPU governor to 'powersave' for balanced operation"
+        fi
+    fi
+    # Set energy preference to 'balance_power' or 'balance_performance' for NORMAL mode
+    set_energy_preference "balance_power"
+fi
 
 while true; do
     temp=$(get_cpu_temp)
@@ -121,8 +194,8 @@ while true; do
         elif [ "$cpu_usage" -ge "$PREDICT_CPU_THRESHOLD" ] && [ "$temp" -ge "$PREDICT_TEMP_THRESHOLD" ]; then
             lock_frequency "PREDICTIVE" "$temp" "$cpu_usage"
         
-        # PREDICTIVE: High CPU alone (likely sustained work)
-        elif [ "$cpu_usage" -ge 75 ]; then
+        # PREDICTIVE: High CPU alone (only if temp is also elevated)
+        elif [ "$cpu_usage" -ge "$HIGH_CPU_THRESHOLD" ] && [ "$temp" -ge "$HIGH_CPU_TEMP_THRESHOLD" ]; then
             lock_frequency "HIGH_CPU" "$temp" "$cpu_usage"
         fi
     fi
