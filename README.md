@@ -13,6 +13,17 @@ On Linux, Dell laptops often experience:
 - ❌ **Fans not responding properly**
 - ❌ **Brief temperature spikes** that make the laptop uncomfortable
 
+## ✨ NEW: Dual-Mode System (Latest Update)
+
+The thermal manager now supports **two modes** that you can switch between:
+
+- **NORMAL Mode** (Default): Balanced performance with 3.7 GHz max, optimized for general use and battery life
+- **PERFORMANCE Mode**: Maximum performance with 4.2 GHz single-core turbo, optimized for intensive workloads
+
+See the [Dual-Mode Documentation](#-dual-mode-system) section below for details.
+
+---
+
 ## ✅ The Solution: Option D (Recommended)
 
 After extensive testing, **Option D** provides the optimal balance:
@@ -227,6 +238,126 @@ After testing all configurations for over 4 hours with real workloads:
 
 ---
 
+## 🎯 Dual-Mode System
+
+### Overview
+
+The latest version of the thermal manager includes a **dual-mode system** that allows you to switch between NORMAL and PERFORMANCE modes based on your needs. This provides flexibility for different use cases without needing to edit configuration files.
+
+### NORMAL Mode (Default)
+
+**Best for**: General use, battery life, balanced performance
+
+- **Max Burst Frequency**: 3.7 GHz (single-core turbo)
+- **Max Sustained Frequency**: 2.6 GHz (when locked)
+- **Lock Thresholds**: 
+  - CPU >75% AND temp >62°C (predictive)
+  - CPU >85% AND temp >65°C (high CPU)
+- **Emergency Lock**: 72°C
+- **Unlock Thresholds**: CPU <40% AND temp <60°C
+- **CPU Governor**: schedutil or powersave
+- **Energy Preference**: balance_power
+
+**Performance Profile**:
+- Light tasks: 3.7 GHz bursts
+- Sustained load: ~2.6 GHz
+- Thermal safety: Conservative (stays cool)
+- Battery life: Excellent
+
+### PERFORMANCE Mode
+
+**Best for**: Gaming, intensive workloads, maximum performance
+
+- **Max Burst Frequency**: 4.2 GHz (single-core turbo)
+- **Max Sustained Frequency**: 3.8 GHz (when locked, near max all-core)
+- **Lock Thresholds**:
+  - CPU >99% AND temp >87°C (virtually never triggers)
+  - CPU >99% AND temp >87°C (high CPU)
+- **Emergency Lock**: 88°C (protects from 90°C+ spikes)
+- **Unlock Thresholds**: CPU <80% AND temp <82°C
+- **CPU Governor**: performance or schedutil
+- **Energy Preference**: performance
+- **Intel P-State**: min_perf_pct set to 80% (prevents 1.7-1.9 GHz cap)
+
+**Performance Profile**:
+- Light tasks: 4.2 GHz single-core, ~3.8 GHz all-core
+- Sustained load: ~3.8 GHz
+- Thermal safety: Minimal throttling (allows higher temps)
+- Battery life: Reduced (performance priority)
+
+### Switching Between Modes
+
+The mode is stored in `/etc/thermal-manager-mode`. To switch modes:
+
+```bash
+# Switch to PERFORMANCE mode
+echo "PERFORMANCE" | sudo tee /etc/thermal-manager-mode
+sudo systemctl restart thermal-manager
+
+# Switch to NORMAL mode
+echo "NORMAL" | sudo tee /etc/thermal-manager-mode
+sudo systemctl restart thermal-manager
+
+# Check current mode
+cat /etc/thermal-manager-mode
+```
+
+### Helper Script (Optional)
+
+Create a convenient mode switcher:
+
+```bash
+#!/bin/bash
+# Save as: /usr/local/bin/thermal-mode
+
+if [ "$1" = "performance" ] || [ "$1" = "perf" ]; then
+    echo "PERFORMANCE" | sudo tee /etc/thermal-manager-mode > /dev/null
+    sudo systemctl restart thermal-manager
+    echo "Switched to PERFORMANCE mode"
+elif [ "$1" = "normal" ]; then
+    echo "NORMAL" | sudo tee /etc/thermal-manager-mode > /dev/null
+    sudo systemctl restart thermal-manager
+    echo "Switched to NORMAL mode"
+else
+    current=$(cat /etc/thermal-manager-mode 2>/dev/null || echo "NORMAL")
+    echo "Current mode: $current"
+    echo "Usage: thermal-mode [normal|performance]"
+fi
+```
+
+Make it executable:
+```bash
+sudo chmod +x /usr/local/bin/thermal-mode
+```
+
+Then use it:
+```bash
+sudo thermal-mode performance  # Switch to PERFORMANCE
+sudo thermal-mode normal      # Switch to NORMAL
+thermal-mode                  # Check current mode
+```
+
+### When to Use Each Mode
+
+**Use NORMAL Mode when:**
+- General computing tasks
+- Web browsing, office work
+- Battery-powered operation
+- When you want cooler temperatures
+- Development work (most cases)
+
+**Use PERFORMANCE Mode when:**
+- Gaming
+- Video encoding/rendering
+- Compiling large projects
+- CPU-intensive workloads
+- When maximum performance is needed
+- When plugged into AC power
+
+**Note**: PERFORMANCE mode will result in higher temperatures and reduced battery life. Only use when necessary.
+
+---
+
 ## 🤝 Contributing
 
 If you find this useful or have improvements, feel free to:
@@ -240,6 +371,20 @@ If you find this useful or have improvements, feel free to:
 ## 📄 License
 
 MIT License - Feel free to use and modify!
+
+---
+
+## 📝 Recent Changes
+
+### November 24, 2024 - Dual-Mode System
+- **Major Feature**: Implemented dual-mode system (NORMAL and PERFORMANCE)
+- **Mode Configuration**: Added `/etc/thermal-manager-mode` file for persistent mode selection
+- **NORMAL Mode**: Balanced performance with 3.7 GHz max, 2.6 GHz sustained
+- **PERFORMANCE Mode**: Maximum performance with 4.2 GHz single-core, 3.8 GHz all-core
+- **Governor Management**: Automatic governor selection based on mode
+- **Intel P-State Optimization**: Added min_perf_pct configuration for PERFORMANCE mode to prevent aggressive throttling
+- **Enhanced Logging**: Improved log messages with mode information
+- **Better Thresholds**: Mode-specific temperature and CPU thresholds
 
 ---
 
